@@ -6,3 +6,8 @@ Follow me on twitter: [@grepharder](https://twitter.com/grepharder)
 ```
 #grep #frida #radare2 #goodcoffee #goodfood #mobilesecurity #reverseengineering #hashes#♥️##
 ```
+
+
+# blog entries
+
+- [solving_egypt_r2con_challenge](solving_egypt_r2con_challenge.md)
