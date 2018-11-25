@@ -10,4 +10,5 @@ Follow me on twitter: [@grepharder](https://twitter.com/grepharder)
 
 # blog entries
 
-- [solving_egypt_r2con_challenge](solving_egypt_r2con_challenge.md)
+- [0x00 Solving r2con 2018 Egypt Challenge](0x00_solving_egypt_r2con_challenge.md)
+- [0x01 Intro to Reversing iOS Swift Apps with radare2](0x01_intro_to_reversing_ios_swift_apps_with_radare2.md)

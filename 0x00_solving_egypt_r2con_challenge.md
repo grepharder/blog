@@ -1,4 +1,4 @@
-# r2con 2018 egypt challenge
+# 0x00 Solving r2con 2018 Egypt Challenge
 This was one of the easy challenges I solved for the r2con 2018. I hope that it can help some people starting to use radare2 and do some _marketing_ for r2dec, which I think (just as r2) is amazing.
 
 ## Description
