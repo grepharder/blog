@@ -60,7 +60,7 @@ We can expect that **when we click on the login button, it will retrieve our tex
 
 If this is the first time you hear about this take a look at `EditText.getText` here:
 
-https://developer.android.com/reference/android/widget/EditText#getText()
+<https://developer.android.com/reference/android/widget/EditText#getText()>
 
 ```
 public Editable getText ()
@@ -498,7 +498,7 @@ Let's take a look in the layout XML file corresponding to the current activity [
      android:hint="@string/title_activity_omtg__datast_002__logging_password"/>
 ```
 
-We see that `loggingUsername` does not have an `inputType`, so it will be the default (`TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE` -> 131073).
+We see that `loggingUsername` does not have an `inputType`, so it will be the default (`TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE` -> `131073`).
 
 `loggingPassword` has an `inputType` and it is `textPassword`.
 
@@ -507,9 +507,9 @@ textPassword	81	Text that is a password.
 Corresponds to InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD.
 ```
 
-The 81 is in hex, also 0x81. I like to use radare2 for this stuff as well, run this command `rax2 0x81` -> `129`. See rax2 help for more.
+The `81` is in hex, also `0x81`. I like to use radare2 for this stuff as well, run this command `rax2 0x81` -> `129`. See `rax2` help for more.
 
-Reference and recommendations on how to set values in the layout XML: https://developer.android.com/training/keyboard-input/style
+Reference and recommendations on how to set values in the layout XML can be found [here](https://developer.android.com/training/keyboard-input/style).
 
 
 #### Did you noticed the `|` when setting the inputType?
@@ -576,7 +576,7 @@ InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
 
 ## Final Comments
 
-We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deep and getting our hands dirty. I hope you have found this article interesting and have learned a few things here, all things I've promised at the [beginning](#what-are-we-going-to-learn-along-the-way) and more.
+We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deeper and getting our hands dirty. I hope you have found this article interesting and have learned a few things here, all things I've promised at the [beginning](#what-are-we-going-to-learn-along-the-way) and more.
 
 > If you have comments, feedback or questions feel free to reach me on Twitter :)
 
