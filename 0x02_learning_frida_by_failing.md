@@ -10,9 +10,9 @@ So yes, **this will take us some time**, take a cup of good coffee because we ar
 
 ## These are our tasks
 
-1. Log all user inputs including password fields
-2. Manipulate the user input on runtime
-3. Perform static and dynamic analysis of text fields
+1. [Log all user inputs including password fields](#log-all-user-inputs-including-password-fields)
+2. [Manipulate the user input on runtime](#manipulate-the-user-input-on-runtime)
+3. [Perform static and dynamic analysis of text fields](#perform-static-and-dynamic-analysis-of-text-fields)
 
 ## What are we going to learn along the way?
 
@@ -58,11 +58,15 @@ We can expect that **when we click on the login button, it will retrieve our tex
 <center><img src="img/0x02/002_LOGGING.gif" width="350" title="OMTG_DATAST_002_Logging.java"></center>
 
 
-If this is the first time you hear about this take a look at `EditText.getText` here: https://developer.android.com/reference/android/widget/EditText#getText()
+If this is the first time you hear about this take a look at `EditText.getText` here:
+
+https://developer.android.com/reference/android/widget/EditText#getText()
 
 ```
 public Editable getText ()
-Return the text that TextView is displaying. If setText(CharSequence) was called with an argument of BufferType.SPANNABLE or BufferType.EDITABLE, you can cast the return value from this method to Spannable or Editable, respectively.
+Return the text that TextView is displaying.
+If setText(CharSequence) was called with an argument of BufferType.SPANNABLE or BufferType.EDITABLE,
+you can cast the return value from this method to Spannable or Editable, respectively.
 ```
 
 If you are really curious, you can [take a look at the source code](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/java/android/widget/EditText.java#107):
@@ -301,7 +305,8 @@ EditText.getText.overload().implementation = function () {
 Now run:
 
 ```
-[LGE Nexus 5X::sg.vp.owasp_mobile.omtg_android]-> Error: Cast from 'android.text.SpannableStringBuilder' to 'java.lang.String' isn't possible
+[LGE Nexus 5X::sg.vp.owasp_mobile.omtg_android]-> Error: Cast from 'android.text.SpannableStringBuilder'
+to 'java.lang.String' isn't possible
     at ClassFactory.cast (frida/node_modules/frida-java/lib/class-factory.js:744:1)
     at Runtime.cast (frida/node_modules/frida-java/index.js:383:1)
     at klass.EditText.getText.overload.implementation (/repl1.js:22:25)
@@ -453,13 +458,15 @@ We will give `user: myuser` and `password: mypassword` in both cases:
 Before running the hook:
 
 ```
-sg.vp.owasp_mobile.omtg_android E/OMTG_DATAST_002_Logging: User successfully logged in. User: myuser Password: mypassword
+sg.vp.owasp_mobile.omtg_android E/OMTG_DATAST_002_Logging:
+User successfully logged in. User: myuser Password: mypassword
 ```
 
 While running the hook:
 
 ```
-sg.vp.owasp_mobile.omtg_android E/OMTG_DATAST_002_Logging: User successfully logged in. User: holaaaaa Password: holaaaaa
+sg.vp.owasp_mobile.omtg_android E/OMTG_DATAST_002_Logging:
+User successfully logged in. User: holaaaaa Password: holaaaaa
 ```
 
 ## Perform static and dynamic analysis of text fields
@@ -509,16 +516,19 @@ Reference and recommendations on how to set values in the layout XML: https://de
 
 The operator `|` is a bitwise logical `or` (also used as `^`).
 
+```
 InputType.TYPE_CLASS_TEXT -> 1
-
 InputType.TYPE_TEXT_VARIATION_PASSWORD -> 128
+```
 
-You can also use rax2 to calculate that (`=10` for base 10): `rax2 =10 1^128` -> `129`. The bitwise operation is `00000001b ^ 10000000b = 10000001b`.
+You can also use rax2 to calculate that (`=10` for base 10): `rax2 =10 1^128` -> `129`.
+
+The bitwise operation is `00000001b ^ 10000000b = 10000001b`.
 
 
-#### What about the android:password attribute for TextFields?
+#### What about the `android:password` attribute for `TextField`?
 
-You probably have ever seen or heard about the attribute [android:password](https://developer.android.com/reference/android/widget/TextView#attr_android:password). Even if in the docs it's not set as such, it seems that is deprecated: see [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/values/attrs.xml#4669)
+You probably have ever seen or heard about the attribute [`android:password`](https://developer.android.com/reference/android/widget/TextView#attr_android:password). Even if in the docs it's not set as such, it seems that is deprecated, see [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/values/attrs.xml#4669):
 
 ```xml
 4669        <!-- Whether the characters of the field are displayed as
@@ -566,7 +576,7 @@ InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
 
 ## Final Comments
 
-We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deep and getting our hands dirty. I hope you have found this article interesting and have learned a few things here, all things I've promised at the [beginning](#What-are-we-going-to-learn-along-the-way?) and more.
+We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deep and getting our hands dirty. I hope you have found this article interesting and have learned a few things here, all things I've promised at the [beginning](#what-are-we-going-to-learn-along-the-way) and more.
 
 > If you have comments, feedback or questions feel free to reach me on Twitter :)
 
