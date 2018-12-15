@@ -69,7 +69,7 @@ If setText(CharSequence) was called with an argument of BufferType.SPANNABLE or 
 you can cast the return value from this method to Spannable or Editable, respectively.
 ```
 
-If you are really curious, you can [take a look at the source code](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/java/android/widget/EditText.java#107):
+If you are really curious, you can [take a look at the source code](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/java/android/widget/EditText.java#107) in AndroidXRef by [@rchiossi](https://twitter.com/rchiossi):
 
 ```java
 74      public class EditText extends TextView {
