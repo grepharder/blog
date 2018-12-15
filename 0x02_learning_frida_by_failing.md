@@ -142,11 +142,11 @@ EditText.getText.implementation = function () {
 
 And this is the output:
 
-<pre style="color: red;">
+```
 getText(): has more than one overload, use .overload(<signature>) to choose from:
 	.overload()
 	.overload()
-</pre>
+```
 
 Oops, we forgot to use the overload:
 ```
@@ -246,7 +246,7 @@ EditText.getText.overload().implementation = function () {
 
 The output is:
 
-<pre style="color: red;">
+```
 [LGE Nexus 5X::sg.vp.owasp_mobile.omtg_android]-> Error: <init>(): argument types do not match any of:
 	.overload()
 	.overload('java.lang.String')
@@ -269,7 +269,7 @@ The output is:
     at klass.EditText.getText.overload.implementation (/repl1.js:22:54)
     at f (eval at implement (frida/node_modules/frida-java/lib/class-factory.js:2103:1), <anonymous>:1:277)
 Process terminated
-</pre>
+```
 
 We cannot build an `String` just by using whatever `retval` is.
 
@@ -300,13 +300,13 @@ EditText.getText.overload().implementation = function () {
 
 Now run:
 
-<pre style="color: red;">
+```
 [LGE Nexus 5X::sg.vp.owasp_mobile.omtg_android]-> Error: Cast from 'android.text.SpannableStringBuilder' to 'java.lang.String' isn't possible
     at ClassFactory.cast (frida/node_modules/frida-java/lib/class-factory.js:744:1)
     at Runtime.cast (frida/node_modules/frida-java/index.js:383:1)
     at klass.EditText.getText.overload.implementation (/repl1.js:22:25)
     at f (eval at implement (frida/node_modules/frida-java/lib/class-factory.js:2103:1), <anonymous>:1:277)
-</pre>
+```
 
 It did not work as we wanted but look, the error says that the class `android.text.SpannableStringBuilder` cannot be casted to `java.lang.String`. Let's correct the casting.
 
