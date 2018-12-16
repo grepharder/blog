@@ -131,7 +131,7 @@ Our first idea could be to do this:
 
 1. Hook the implementation of `getText`
 2. Get the return value
-3. Print to to the console
+3. Print it to the console
 4. Return it so that the app can continue the execution
 
 ```
@@ -208,7 +208,7 @@ output:
 ...
 ```
 
-:/ (Actually very useful for other tasks, take a not of it for another occasion: `JSON.stringify()`)
+:/ (Actually very useful for other tasks, take a note of it for another occasion: `JSON.stringify()`)
 
 ### Try Número Tres
 
@@ -275,7 +275,7 @@ The output is:
 Process terminated
 ```
 
-We cannot build an `String` just by using whatever `retval` is.
+We cannot build a `String` just by using whatever `retval` is.
 
 But maybe if we add a `.toString()`?:
 
@@ -375,7 +375,7 @@ EditText.getText.overload().implementation = function () {
 };
 ```
 
-This works as well as the other code but you won't be able to take a look at the original code in other cases so it's good that you learn how to deal with those errors and castings. If you are curious and want to understand why that Spannable-thingy came, just take into account that EditText [inherits](https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html) from TextView (that's why we see that it calls `super.`) and look at the `TextView.getText` code [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/java/android/widget/TextView.java#2160).
+This works as well as the other code but you won't be able to take a look at the original code in other cases so it's good that you learn how to deal with those errors and castings. If you are curious and want to understand why that Spannable-thingy came, just take into account that `EditText` [inherits](https://docs.oracle.com/javase/tutorial/java/IandI/subclasses.html) from `TextView` (that's why we see that it calls `super.`) and look at the `TextView.getText` code [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/java/android/widget/TextView.java#2160).
 
 
 ### Full Code
@@ -471,7 +471,7 @@ User successfully logged in. User: holaaaaa Password: holaaaaa
 
 ## Perform static and dynamic analysis of text fields
 
-Imagine you are responsible for verifying that the password fields of a target app are setup correctly. How can we do this? And I mean, **REALLY verify** this, not just by writing something in the password field and checking if it is turned into a set of points :)
+Imagine you are responsible for verifying that the password fields of a target app are correctly setup. How can we do this? And I mean, **REALLY verify** this, not just by writing something in the password field and checking if it is turned into a set of points :)
 
 We will take two approaches: static and dynamic analysis.
 
@@ -528,7 +528,7 @@ The bitwise operation is `00000001b ^ 10000000b = 10000001b`.
 
 #### What about the `android:password` attribute for `TextField`?
 
-You probably have ever seen or heard about the attribute [`android:password`](https://developer.android.com/reference/android/widget/TextView#attr_android:password). Even if in the docs it's not set as such, it seems that is deprecated, see [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/values/attrs.xml#4669):
+You probably already have seen or heard about the attribute [`android:password`](https://developer.android.com/reference/android/widget/TextView#attr_android:password) before. Even if in the docs it's not set as such, it seems that is deprecated, see [here](http://androidxref.com/9.0.0_r3/xref/frameworks/base/core/res/res/values/attrs.xml#4669):
 
 ```xml
 4669        <!-- Whether the characters of the field are displayed as
@@ -550,7 +550,7 @@ console.log("[*] EditText Layout Id: " + this.getResources().getResourceName(thi
 console.log("[*] EditText inputType: " + this.getInputType());
 ```
 
-If we run the script with these new lines:
+If we run the script with these new lines we get the following:
 
 ```
 [*] EditText Return:
@@ -576,7 +576,7 @@ InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
 
 ## Final Comments
 
-We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deeper and getting our hands dirty. I hope you have found this article interesting and have learned a few things here, all things I've promised at the [beginning](#what-are-we-going-to-learn-along-the-way) and more.
+We were able not only to solve the `OMTG_DATAST_002_Logging` exercise but to learn how to solve problems that might arise when writing hooks with Frida, to read the docs and the source code if necessary, because this is the only way to really understand something, just by going deeper and getting our hands dirty. I hope you have found this article interesting and learned a couple of things here, all things I've promised at the [beginning](#what-are-we-going-to-learn-along-the-way) and more.
 
 > If you have comments, feedback or questions feel free to reach me on Twitter :)
 
