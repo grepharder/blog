@@ -29,7 +29,7 @@ So yes, **this will take us some time**, take a cup of good coffee because we ar
 
 ### The Target
 
-Let's use the OMTG Playground app. When we want to perform hooks we need normally to do some reverse engineering, I will skip that step here and go straight to the source code that you can view online:
+Let's use the OMTG Playground app (you can clone and build the project or just download the APKs [here](https://github.com/OWASP/MSTG-Hacking-Playground/tree/master/Android/OMTG-Android-App/app)). When we want to perform hooks we need normally to do some reverse engineering, I will skip that step here and go straight to the source code that you can view online:
 
 
 We will focus on this code part of [OMTG_DATAST_002_Logging.java](https://github.com/OWASP/MSTG-Hacking-Playground/blob/master/Android/OMTG-Android-App/app/src/main/java/sg/vp/owasp_mobile/OMTG_Android/OMTG_DATAST_002_Logging.java):
