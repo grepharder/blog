@@ -169,7 +169,7 @@ We found the following information:
 
 ## URL Schemes
 
-When you click on a telephone number, a `tel://` URL scheme is there waiting to take you to the Phone app. It will simply open your Phone app and call the given number. Internally the Phone app is ready for this. It is always waiting that an URL request starting with `tel://` arrives. If you are reading this from your iPhone or iPad try clicking this: <tel://12345678>, it will try to call 12345678.
+When you click on a telephone number, a `tel://` URL scheme is there waiting to take you to the Phone app. It will simply open your Phone app and call the given number. Internally the Phone app is ready for this. It is always waiting that an URL request starting with `tel://` arrives. If you are reading this from your iPhone or iPad try clicking this: [tel://12345678](tel://12345678), it will try to call 12345678.
 
 <center><img src="img/0x03/tel.gif" title="Calling tel://"></center>
 
