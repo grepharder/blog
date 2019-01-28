@@ -99,7 +99,7 @@ When we open the link we can observe how the mentioned method is being called. W
 
 ```
 [iPhone::Telegram]->
-[*] (*** -[NSURLComponents description]: <NSURLComponents 0x1c00125c0>) initWithURL:resolvingAgainstBaseURL: @ 0x188194a5e
+[*] (-[NSURLComponents description]: <NSURLComponents 0x1c00125c0>) initWithURL:resolvingAgainstBaseURL: @ 0x188194a5e
 initWithURL: https://telegram.me/fridadotre
 resolvingAgainstBaseURL: 0x1
 RET @ 0x1c00125c0:
@@ -145,7 +145,12 @@ continueUserActivity: <NSUserActivity: 0x1c0a30600>
 continueUserActivity.webpageURL: https://telegram.me/fridadotre
 restorationHandler: <__NSStackBlock__: 0x16f7a6898>
 Context information:
-Context  : {"pc":"0x100685844","sp":"0x16f7a6890","x0":"0x105146580","x1":"0x18c02205d","x2":"0x1051446a0","x3":"0x1c0a30600","x4":"0x16f7a6898","x5":"0x1","x6":"0x10b9537d0","x7":"0x810","x8":"0x1c0a30600","x9":"0x18c02205d","x10":"0x1058fb000","x11":"0x1b0000003f","x12":"0x1058fb1d0","x13":"0x185a100770f15","x14":"0x0","x15":"0x7f7e20","x16":"0x10b12c000","x17":"0x10b0d1720","x18":"0x0","x19":"0x1c0a30600","x20":"0x1051446a0","x21":"0x18c02205d","x22":"0x105146580","x23":"0x1c4a76280","x24":"0x1b2a00c60","x25":"0x14","x26":"0x1c4e65d40","x27":"0x0","x28":"0x2ffffff","fp":"0x16f7a68e0","lr":"0x18b4f9a48"}
+Context  : {"pc":"0x100685844","sp":"0x16f7a6890","x0":"0x105146580","x1":"0x18c02205d","x2":"0x1051446a0",
+"x3":"0x1c0a30600","x4":"0x16f7a6898","x5":"0x1","x6":"0x10b9537d0","x7":"0x810","x8":"0x1c0a30600",
+"x9":"0x18c02205d","x10":"0x1058fb000","x11":"0x1b0000003f","x12":"0x1058fb1d0","x13":"0x185a100770f15",
+"x14":"0x0","x15":"0x7f7e20","x16":"0x10b12c000","x17":"0x10b0d1720","x18":"0x0","x19":"0x1c0a30600",
+"x20":"0x1051446a0","x21":"0x18c02205d","x22":"0x105146580","x23":"0x1c4a76280","x24":"0x1b2a00c60",
+"x25":"0x14","x26":"0x1c4e65d40","x27":"0x0","x28":"0x2ffffff","fp":"0x16f7a68e0","lr":"0x18b4f9a48"}
 Return   : 0x18b4f9a48
 ThreadId : 771
 Depth    : 0
