@@ -76,7 +76,7 @@ Both will open in Safari. Give it a try!
 
 Let's write some Frida hooks to inspect the opening of the links and repeat the process. The [`application:continueUserActivity:restorationHandler:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623072-application) method and the class  `NSConcreteURLComponents` will help up to take a first look into what is happening internally (as always be sure to take a look into the documentation).
 
-How I came up with these two method? Well, `application:continueUserActivity:restorationHandler:` [must be implemented in order to use Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2). To find `initWithURL:resolvingAgainstBaseURL:` I had to trace a little bit with Frida, tracing all combinations of classes like `NSURL*` until I found the method I was interested in. It is not being actively called by the app so you won't even find it in the source code. Actually I searched for it and only found this:
+How I came up with these two methods? Well, `application:continueUserActivity:restorationHandler:` [must be implemented in order to use Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2). To find `initWithURL:resolvingAgainstBaseURL:` I had to trace a little bit with Frida, tracing all combinations of classes like `NSURL*` until I found the method I was interested in. It is not being actively called by the app so you won't even find it in the source code. Actually I searched for it and only found this:
 
 ```
 + (MTSignal *)_appleMapsLocationContentForURL:(NSURL *)url
