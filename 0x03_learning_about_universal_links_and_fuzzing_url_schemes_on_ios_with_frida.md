@@ -1,4 +1,4 @@
-# 0x03 Learning about Universal Links and fuzzing URL Schemes on iOS with Frida
+# 0x03 Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida
 
 Ever wondered what happens under-the-hood when you click on a telephone number on a webpage or email? Or why is it possible that you click on a link to the Android Play or Apple App Store and it opens your app instead of opening that as a normal link.
 
