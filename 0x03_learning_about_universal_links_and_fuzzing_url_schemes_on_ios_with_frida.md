@@ -52,7 +52,17 @@ Opening (`/account/access`) shows options to open it in Safari and in Twitter:
 
 <center><img src="img/0x03/allowed_universal_link.gif" title="Allowed Universal Link"></center>
 
-You can do the same straight from Frida, just remember to do it from another app that is not the target app. If not, deep linking won't work.
+You can do the same straight from Frida, use this function (copy it to the CLI):
+
+```
+function openURL(url) {
+   var UIApplication = ObjC.classes.UIApplication.sharedApplication();
+   var toOpen = ObjC.classes.NSURL.URLWithString_(url);
+   return UIApplication.openURL_(toOpen);
+}
+```
+
+Just remember to do it from another app that is not the target app. If not, deep linking won't work.
 
 ```
 [iPhone::iGoat-Swift]-> openURL("https://twitter.com/account/access")
@@ -74,9 +84,9 @@ Both will open in Safari. Give it a try!
 
 ### Using Frida's Interceptor
 
-Let's write some Frida hooks to inspect the opening of the links and repeat the process. The [`application:continueUserActivity:restorationHandler:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623072-application) method and the class  `NSConcreteURLComponents` will help up to take a first look into what is happening internally (as always be sure to take a look into the documentation).
+Let's write some Frida hooks to inspect the opening of the previous links. The [`application:continueUserActivity:restorationHandler:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623072-application) method and the class  `NSConcreteURLComponents` will help us to take a first look into what is internally happening (as always be sure to take a look into the documentation).
 
-How I came up with these two methods? Well, `application:continueUserActivity:restorationHandler:` [must be implemented in order to use Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2). To find `initWithURL:resolvingAgainstBaseURL:` I had to trace a little bit with Frida, tracing all combinations of classes like `NSURL*` until I found the method I was interested in. It is not being actively called by the app so you won't even find it in the source code. Actually I searched for it and only found this:
+How did I come up with these two methods? Well, `application:continueUserActivity:restorationHandler:` [must be implemented in order to use Universal Links](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2). To find `initWithURL:resolvingAgainstBaseURL:` I had to trace a little bit with Frida, targeting all combinations of classes like `NSURL~` until I found the method I was interested in. It is not being actively called by the app so you won't even find it in the source code. Actually, I searched for it and only found this:
 
 ```
 + (MTSignal *)_appleMapsLocationContentForURL:(NSURL *)url
@@ -93,7 +103,16 @@ To implement the hooks we will use [Frida's Interceptor](https://www.frida.re/do
 
 <script src="https://gist.github.com/grepharder/7a6c1b64f5e8eecf78ca076140ac09ec.js"></script>
 
-When we open the link we can observe how the mentioned method is being called. We can also see how the link is resolved using `-[__NSConcreteURLComponents initWithURL:resolvingAgainstBaseURL:]`:
+Some notes here:
+
+- `Interceptor.attach(target, callbacks)` intercepts calls to function at `target` (memory address) and runs the specified `callbacks` (JavaScript functions)
+- one target is `ObjC.classes.AppDelegate['- application:continueUserActivity:restorationHandler:'].implementation`, that is the memory address of the implementation of the `application:continueUserActivity:restorationHandler:` method that can be found in the `AppDelegate` class (if you forget `.implementation` you will get a different memory address)
+- `onEnter: function (args)` is a callback function that can be used to read or write arguments
+- `onLeave: function (retval)` is callback function that we use to read or replace the return value of the method
+- the callbacks have a significant impact on performance. if you don't need one of these callbacks you may just remove it from your script, e.g. `onLeave`
+- the interceptor is not iOS specific, you can also use it to intercept e.g. libc calls on Linux or form an Android native library. [Read the docs](https://www.frida.re/docs/javascript-api/#interceptor)
+
+When we open the link we can observe how the before mentioned methods are being called (the context information was removed from the following output, we will see about that below):
 
 ```
 [iPhone::Telegram]->
@@ -121,11 +140,12 @@ RET @ 0x1:
 Let's use the previous example to learn a bit more about the Interceptor.
 
 This is a generic Objective-C method declaration:
+
 ```
 int SomeClass_method_foo_(SomeClass *self, SEL _cmd, NSString *str) { ...
 ```
 
-So very simple said, and talking about registers, we will find the calling class in `x0`, the selector or method name in `x1`, starting on `x2` we will find the method input arguments.
+So, very simple said (and talking about registers), we will find the calling class in register `x0`, the selector or method name in `x1`, starting on `x2` we will find the method input arguments. Learn more about iOS registers and assembly [here](https://www.raywenderlich.com/2705-ios-assembly-tutorial-understanding-arm) and in the [iOS ABI Function Call Guide](https://developer.apple.com/library/archive/documentation/Xcode/Conceptual/iPhoneOSABIReference/Articles/ARM64FunctionCallingConventions.html).
 
 This is the method declaration of `application:continueUserActivity:restorationHandler:`:
 ```
@@ -134,7 +154,9 @@ continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *restorableObjects))restorationHandler;
 ```
 
-We will extend the output by introducing the Context and then analyze the values, our new output is:
+We will extend the output by introducing the Context and then analyze the values. We access and print it within the function `printContext(_this)`, we have passed the `this` object to it and used it not only to print the context but also other information like the return address.
+
+Our new output is:
 
 ```
 [*] (<AppDelegate: 0x105146580> @ 0x105146580) application:continueUserActivity:restorationHandler: @ 0x18c02205d
@@ -158,21 +180,21 @@ RET: 0x1
 
 We found the following information:
 
-- The calling class: "x0":"0x105146580" -> `<AppDelegate: 0x105146580>`
-- The selector (method name): "x1":"0x18c02205d" -> `application:continueUserActivity:restorationHandler:`
-- The first parameter: "x2":"0x1051446a0" -> `<Application: 0x1051446a0>`
-- The second parameter: "x3":"0x1c0a30600" -> `<NSUserActivity: 0x1c0a30600>`
-- The third parameter: "x4":"0x16f7a6898" -> `<__NSStackBlock__: 0x16f7a6898>`
+- The calling class: "x0": "0x105146580" -> `<AppDelegate: 0x105146580>`
+- The selector (method name): "x1": "0x18c02205d" -> `application:continueUserActivity:restorationHandler:`
+- The first parameter: "x2": "0x1051446a0" -> `<Application: 0x1051446a0>`
+- The second parameter: "x3": "0x1c0a30600" -> `<NSUserActivity: 0x1c0a30600>`
+- The third parameter: "x4": "0x16f7a6898" -> `<__NSStackBlock__: 0x16f7a6898>`
 - The return value: -> `(BOOL) 0x1`
 
 ## URL Schemes
 
-When you click on a telephone number, a `tel://` URL scheme is there waiting to take you to the Phone app. It will simply open your Phone app and call the given number. Internally the Phone app is ready for this. It is always waiting that an URL request starting with `tel://` arrives. If you are reading this from your iPhone or iPad try clicking this: [tel://12345678](tel://12345678), it will try to call 12345678.
+When you click on a telephone number, a `tel://` URL scheme is there waiting to take you to the Phone app. It will simply open your Phone app and try calling the given number. Internally the Phone app is ready for this. It is always waiting that an URL request starting with `tel://` arrives. If you are reading this from your iPhone or iPad try clicking this: [tel://12345678](tel://12345678), it will try to call 12345678.
 
 <center><img src="img/0x03/tel.gif" title="Calling tel://"></center>
 
 
-Some examples of these URL schemes are:
+Some examples of these URL schemes [are](https://ios.gadgethacks.com/news/always-updated-list-ios-app-url-scheme-names-0184033/):
 
 ```
 Apple Music — music:// or musics:// or audio-player-event://
@@ -201,33 +223,42 @@ twitter://post?message=hello%20world
 ```
 
 In order to test them we will:
-- See which ones does the app register so that other apps can call them
-- See which ones does the app intend to call from other apps
+- see which ones does the app register so that other apps can call them
+- see which ones does the app intend to call from other apps
 
 
 In order to find out which URL schemes does the target app support we can look it up inside the `Info.plist` file.
-Let's take a look at [Telegram's `Info.plist` file](https://github.com/peter-iakovlev/Telegram-iOS/blob/master/Telegram-iOS/Info.plist).
+Let's take a look at [Telegram's `Info.plist` file](https://github.com/peter-iakovlev/Telegram-iOS/blob/master/Telegram-iOS/Info.plist#L25) (truncated).
 
 ```
 <key>CFBundleURLTypes</key>
 <array>
 	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Viewer</string>
-		<key>CFBundleURLName</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 		<key>CFBundleURLSchemes</key>
 		<array>
 			<string>telegram</string>
 		</array>
 	</dict>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>tg</string>
+			<string>$(APP_SPECIFIC_URL_SCHEME)</string>
+		</array>
+	</dict>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>db-pa9wtoz9l514anx</string>
+		</array>
+	</dict>
 ```
 
-We see that the `telegram://` is supported. However we will see later that this is not the only scheme supported.
+We see that the `telegram://`, `tg://` and `db-pa9wtoz9l514anx://` are supported.
 
-Now let's find out the URL schemes that the app might call. For this search the `Info.plist` for the `LSApplicationQueriesSchemes` key or search the app binary for common URL schemes, use the string `://` or build a regular expression to match URLs, e.g. using radare2 or rabin2.
+Now let's find out the URL schemes that the app might call. For this search the `Info.plist` for the `LSApplicationQueriesSchemes` key or search the app binary for common URL schemes, use the string `://` or build a regular expression to match URLs, e.g. using [radare2](https://github.com/radare/radare2) or [rabin2](https://r2wiki.readthedocs.io/en/latest/tools/rabin2/).
 
-This is the (truncated) array of schemes for the Telegram app:
+This is the array of [schemes for the Telegram app](https://github.com/peter-iakovlev/Telegram-iOS/blob/master/Telegram-iOS/Info.plist#L63) (also truncated):
 
 ```
 <key>LSApplicationQueriesSchemes</key>
@@ -242,7 +273,7 @@ This is the (truncated) array of schemes for the Telegram app:
 </array>
 ```
 
-If we look [into the code](https://github.com/peter-iakovlev/Telegram-iOS/blob/87e0a33ac438c1d702f2a0b75bf21f26866e346f/Telegram-iOS/AppDelegate.swift#L620) we can see an example of how Telegram uses URL schemes:
+If we look [into the source code](https://github.com/peter-iakovlev/Telegram-iOS/blob/87e0a33ac438c1d702f2a0b75bf21f26866e346f/Telegram-iOS/AppDelegate.swift#L620) we can see an example of how Telegram uses URL schemes:
 
 ```
 openAppStorePage: {
@@ -264,19 +295,7 @@ tg://resolve?domain=radare
 tg://msg?text=Hola
 ```
 
-It uses the `tg://` scheme instead of `telegram://`.
-
-If we simply want to call it we can of course use Frida, open a session via CLI to the Telegram app and paste this function:
-
-```
-function openURL(url) {
-   var UIApplication = ObjC.classes.UIApplication.sharedApplication();
-   var toOpen = ObjC.classes.NSURL.URLWithString_(url);
-   return UIApplication.openURL_(toOpen);
-}
-```
-
-Then use it to send a message with `tg://msg?text=`:
+If we simply want to call it we can of course use Frida, open a session via CLI to the Telegram app and paste the `openURL` function we have seen above. Then use it to send a message with `tg://msg?text=`:
 
 <center><img src="img/0x03/openUrl_sendmsg_telegram.gif" title="Send Message"></center>
 
@@ -286,7 +305,7 @@ Even better, add some cool stickers:
 
 ### Fuzzing URL Schemes
 
-Now that we know 2 of the URL schemes that trigger some functionality in the app, we can build a fuzzer for them and call the `openURL` function with different fuzzing payloads. We will know if the app crashed if a crash report (`.ips`) is generated in `/private/var/mobile/Library/Logs/CrashReporter`.
+Now that we know two of the URL schemes that trigger some functionality in the app, we can build a fuzzer for them and call the `openURL` function with different fuzzing payloads. We will know if the app crashed if a crash report (`.ips`) is generated in `/private/var/mobile/Library/Logs/CrashReporter`.
 
 For this we will use a script from [Frida CodeShare](https://codeshare.frida.re/@dki/ios-url-scheme-fuzzing/) (credits for [@dki](https://codeshare.frida.re/@dki)). We had to slightly modify it as it did not work on iOS 11.1.2. Find the updated version here:
 
@@ -294,10 +313,10 @@ For this we will use a script from [Frida CodeShare](https://codeshare.frida.re/
 
 As an example we will fuzz the [iGoat-Swift app](https://github.com/OWASP/iGoat-Swift). From the static analysis we know that it supports the following URL scheme and parameters: `iGoat://?contactNumber={0}&message={0}`.
 
-Copy the whole script and store it as `ios-url-scheme-fuzzing.js`. It is important to run this from another app (e.g. the SpringBoard app), if we run it from the target app itself we won't be able to detect the crashes as the Frida script will also crash with the app.
+Copy the whole script and store it as `urlschemefuzzer.js`. It is important to run this from another app (e.g. the SpringBoard app), if we run it from the target app itself we won't be able to detect the crashes as the Frida script will also crash with the app.
 
 ```javascript
-$ frida -U iGoat-Swift -l ios-url-scheme-fuzzing.js
+$ frida -U iGoat-Swift -l urlschemefuzzer.js
 [iPhone::SpringBoard]-> fuzz("iGoat", "iGoat://?contactNumber={0}&message={0}")
 ```
 
@@ -306,7 +325,7 @@ $ frida -U iGoat-Swift -l ios-url-scheme-fuzzing.js
 
 ## Final Comments
 
-So, no, no results :/ Unfortunately you cannot always expect to have some findings. But at least I hope you have, as always, learn something new today.
+So, no, no findings, sorry :/ Unfortunately you cannot always expect to have some findings. But at least I hope you have, as always, learn something new today.
 
 
 > If you have comments, feedback or questions feel free to reach me on Twitter :)
