@@ -46,11 +46,11 @@ Example from twitter.com:
 
 Let's trigger ourselves some Universal Links. A GIF is worth thousand words. First open `/about` from the Notes app (Safari won't let us), we see only one option to open it (in the browser).
 
-<center><img src="img/0x03/tel.gif" title="Forbidden Universal Link"></center>
+<center><img src="img/0x03/forbidden_universal_link.gif" title="Forbidden Universal Link"></center>
 
 Opening (`/account/access`) shows options to open it in Safari and in Twitter:
 
-<center><img src="img/0x03/allowed_universal_link_twitter.gif" title="Allowed Universal Link"></center>
+<center><img src="img/0x03/allowed_universal_link.gif" title="Allowed Universal Link"></center>
 
 You can do the same straight from Frida, just remember to do it from another app that is not the target app. If not, deep linking won't work.
 
