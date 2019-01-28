@@ -1,6 +1,6 @@
 # 0x03 Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida
 
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/lonekorean/gist-syntax-themes/848d6580/stylesheets/monokai.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/lonekorean/gist-syntax-themes/d49b91b3/stylesheets/one-dark.css">
 
 Ever wondered what happens under-the-hood when you click on a telephone number on a webpage or email? Or why is it possible that you click on a link to the Android Play or Apple App Store and it opens your app instead of opening that as a normal link.
 
