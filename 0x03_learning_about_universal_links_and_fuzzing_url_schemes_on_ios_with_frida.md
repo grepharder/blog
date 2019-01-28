@@ -6,20 +6,20 @@ We will:
 - learn what Universal Links are and identify the ones that are being used by an app
 - learn what URL Schemes are and identify the ones that are being used by an app
 - call Universal Links and URL Schemes manually and with Frida
-- use of Frida's Interceptor and method calling convention basics on iOS
+- use of Frida's Interceptor and learn some method calling convention basics on iOS
 - use URL Schemes to open a chat or add stickers in Telegram
 - fuzz a URL scheme of the iGoat-Swift app
 
 
 ## Universal Links
 
-Universal Links on iOS (App Links for Android) are used as part of a this *technique* is called deep linking. A Universal Link looks like a *regular* link (e.g. `https://`), but when you click on it, it opens the related app instead of the browser. It is important to note that they are **not redirects**
+Universal Links on iOS (App Links for Android) are used as part of a this *technique* is called deep linking. A Universal Link looks like a *regular* link (e.g. `https://`), but when you click on it, it opens the related app instead of the browser. It is important to note that they are **not redirects**.
 
-This picture summarizes from [kovacha](https://www.kochava.com/smartlinks/) summarizes this:
+This picture from [kovacha](https://www.kochava.com/smartlinks/) summarizes this:
 
 <center><img src="img/0x03/deeplinking.jpg" width="650" title="Deep Linking"></center>
 
-First of all some information gathering, let's inspect what the target app will accept/reject as a Universal Link. For this we need the `apple-app-site-association` file from the app server. It must be there for this to work. Normally it is found at `https://<domain>/apple-app-site-association` or `https://<domain>/.well-known/apple-app-site-association`. We will use this tool: https://branch.io/resources/aasa-validator/ as it will also give us some extra information.
+But how can we test them? First of all we will do some information gathering, let's inspect what the target app will accept/reject as a Universal Link. For this we need the `apple-app-site-association` file from the app server. It must be there for this to work. Normally it is found at `https://<domain>/apple-app-site-association` or `https://<domain>/.well-known/apple-app-site-association`. We will use this tool: [https://branch.io/resources/aasa-validator/](https://branch.io/resources/aasa-validator/) as it will also give us some extra information.
 
 Example from twitter.com:
 
@@ -42,11 +42,9 @@ Example from twitter.com:
 			...
 ```
 
-![`apple-app-site-association-file` Validation](img/0x03/apple-app-site-association-file_validation.png)
+<center><img src="img/0x03/apple-app-site-association-file_validation.png" title="apple-app-site-association-file Validation"></center>
 
-Let's trigger ourselves some Universal Links. A GIF is worth thousand words:
-
-First open `/about` from the Notes app (Safari won't let us), we see only one option to open it (in the browser).
+Let's trigger ourselves some Universal Links. A GIF is worth thousand words. First open `/about` from the Notes app (Safari won't let us), we see only one option to open it (in the browser).
 
 <center><img src="img/0x03/forbidden_universal_link_twitter.gif" title="Forbidden Universal Link"></center>
 
@@ -294,7 +292,7 @@ For this we will use a script from [Frida CodeShare](https://codeshare.frida.re/
 
 <script src="https://gist.github.com/grepharder/4b0724f56d7c451e240a38a7ddd56bc2.js"></script>
 
-As an example we will fuzz the iGoat-Swift app. From the static analysis we know that it supports the following URL scheme and parameters: `iGoat://?contactNumber={0}&message={0}`.
+As an example we will fuzz the [iGoat-Swift app](https://github.com/OWASP/iGoat-Swift). From the static analysis we know that it supports the following URL scheme and parameters: `iGoat://?contactNumber={0}&message={0}`.
 
 Copy the whole script and store it as `ios-url-scheme-fuzzing.js`. It is important to run this from another app (e.g. the SpringBoard app), if we run it from the target app itself we won't be able to detect the crashes as the Frida script will also crash with the app.
 
