@@ -108,7 +108,7 @@ Some notes here:
 - `Interceptor.attach(target, callbacks)` intercepts calls to function at `target` (memory address) and runs the specified `callbacks` (JavaScript functions)
 - one target is `ObjC.classes.AppDelegate['- application:continueUserActivity:restorationHandler:'].implementation`, that is the memory address of the implementation of the `application:continueUserActivity:restorationHandler:` method that can be found in the `AppDelegate` class (if you forget `.implementation` you will get a different memory address)
 - `onEnter: function (args)` is a callback function that can be used to read or write arguments
-- `onLeave: function (retval)` is callback function that we use to read or replace the return value of the method
+- `onLeave: function (retval)` is a callback function that we use to read or replace the return value of the method
 - the callbacks have a significant impact on performance. if you don't need one of these callbacks you may just remove it from your script, e.g. `onLeave`
 - the interceptor is not iOS specific, you can also use it to intercept e.g. libc calls on Linux or form an Android native library. [Read the docs](https://www.frida.re/docs/javascript-api/#interceptor)
 
