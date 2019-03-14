@@ -316,7 +316,7 @@ As an example we will fuzz the [iGoat-Swift app](https://github.com/OWASP/iGoat-
 Copy the whole script and store it as `urlschemefuzzer.js`. It is important to run this from another app (e.g. the SpringBoard app), if we run it from the target app itself we won't be able to detect the crashes as the Frida script will also crash with the app.
 
 ```javascript
-$ frida -U iGoat-Swift -l urlschemefuzzer.js
+$ frida -U SpringBoard -l urlschemefuzzer.js
 [iPhone::SpringBoard]-> fuzz("iGoat", "iGoat://?contactNumber={0}&message={0}")
 ```
 
