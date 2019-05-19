@@ -141,7 +141,7 @@ Tink.caf
 ...
 ```
 
-But it would be too boring to just download the files and play them. We will use the previous one-liner to build a little Frida script with it.
+But it would be too boring to just download the files and play them. We will use the previous one-liner to build a [little Frida script](scripts/0x04/audiobox.js) with it.
 
 ```javascript
 // audiobox.js
@@ -176,7 +176,7 @@ Once we load it to the Frida REPL `frida -U SpringBoard -l audiobox.js` we can s
 
 ## Using Frida's RPC
 
-Frida allows to call functions via [RPC](https://www.frida.re/docs/javascript-api/#rpc) e.g. from Python. Which means that we are able to call the app's methods as if they were Python methods! Isn't that cool? We just have to rewrite our Frida script like this:
+Frida allows to call functions via [RPC](https://www.frida.re/docs/javascript-api/#rpc) e.g. from Python. Which means that we are able to call the app's methods as if they were Python methods! Isn't that cool? We just have to rewrite our [Frida script](scripts/0x04/audiobox_rpc.js) like this:
 
 ```javascript
 // audiobox_rpc.js
@@ -210,7 +210,7 @@ And write a Python script that will basically do the following:
 - access all RPC methods offered by the script
 - detach and close the session
 
-And this is the [Python code](scripts/0x04/frida_rpc_player.py) (run it from the terminal `python3 frida_rpc_player.py`):
+And this is the Python code ([frida_rpc_player.py](scripts/0x04/frida_rpc_player.py)):
 
 ```python
 # frida_rpc_player.py
@@ -240,19 +240,23 @@ rpc.photo()
 session.detach()
 ```
 
+Run it from the terminal by typing `python3 frida_rpc_player.py`.
+
 <center><img src="img/0x04/frida_rpc_player.gif"></center>
 
-> Note: For this gif I've added an extra function to the Frida script in order to [show an alert](https://www.frida.re/docs/examples/ios/) whenever the audio should sound. But actually it is running on a real iPhone and it's playing the sounds for real. Just try it yourself on your own iPhone. If you want to know how I triggered and dismissed the alerts automatically take a look at the full script [here](scripts/0x04/audiobox_rpc_alert.js). You can also see a video with sound [here](img/0x04/frida_rpc_player.mp4).
+> Note: I've added an extra function to the Frida script in order to [show an alert](https://www.frida.re/docs/examples/ios/) whenever the audio is being played. To keep it simple, I won't go into detail here but I *definitely recommend you to take a look* and analyze all the steps in the [audiobox_rpc_alert.js](scripts/0x04/audiobox_rpc_alert.js) script. There you'll see how to trigger and dismiss the alerts automatically.
+
+You can also see a video with sound here:
 
 <center><video controls><source src="img/0x04/frida_rpc_player.mp4" type="video/mp4"></video></center>
 
-Easy, right? But I know you'll say: "cool, I can now easily annoy everyone at home and at cafés making them think they're getting messages but, what else?"
+That was actually easy, right? But I know you'll say: "cool, I can now easily annoy everyone at home and at cafés making them think they're getting messages but, what else?"
 
-This technique might come handy when you're testing an app and trying to crack some code or let the app do tasks for you, e.g. you can let the app do some encryption instead of trying to retrieve the encryption keys (which might be otherwise virtually impossible if the app [correctly implements crypto](https://github.com/OWASP/owasp-mstg/blob/master/Document/0x06e-Testing-Cryptography.md "MSTG: Testing Cryptography on iOS")) and trying to replicate the encryption steps yourself.
+This technique might come handy when you're testing an app and trying to crack some code or let the app do tasks for you. For example, if the app does some encryption/decryption and [correctly implements crypto](https://github.com/OWASP/owasp-mstg/blob/master/Document/0x06e-Testing-Cryptography.md "MSTG: Testing Cryptography on iOS")), extracting the encryption keys should be virtually impossible as they will be properly secured in the Secure Enclave. But think about it, why would you make the effort of trying to extract keys and replicate the encryption algorithm yourself when the app is already offering an `encrypt()`/`decrypt()` function.
 
 And remember, this is not specific to `NativeFunction`s, **you can use any Frida code you like via RPC**. For example, you may wrap any Objective-C function and serve it the same way.
 
-For example, take a look at this function from my [previous post](https://grepharder.github.io/blog/0x03_learning_about_universal_links_and_fuzzing_url_schemes_on_ios_with_frida.html "0x03 Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida"):
+For example, we can write a Frida script ([openurl_rpc.js](scripts/0x04/openurl_rpc.js)) to call this function from my [previous post](https://grepharder.github.io/blog/0x03_learning_about_universal_links_and_fuzzing_url_schemes_on_ios_with_frida.html "0x03 Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida"):
 
 ```javascript
 // openurl_rpc.js
