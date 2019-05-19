@@ -8,7 +8,7 @@ The initial inspiration for this blog post came from a funny tweet by [@CodeColo
 
 <center><img src="img/0x04/tweet.png" width="650"></center>
 
-If you haven't tried to run the mentioned like yet, please do it. Open the Frida REPL and type it:
+If you haven't tried to run the mentioned line yet, please do it. Open the Frida REPL and type it:
 
 ```javascript
  new NativeFunction(Module.findExportByName('AudioToolbox', 'AudioServicesPlaySystemSound'), 'void', ['int'])(1007)
