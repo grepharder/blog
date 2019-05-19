@@ -4,7 +4,7 @@ Follow me on twitter: [@grepharder](https://twitter.com/grepharder)
 
 # things that I love
 ```
-#grep #frida #radare2 #goodcoffee #goodfood #mobilesecurity #reverseengineering #hashes#♥️##
+#grep #frida #radare2 #goodcoffee #goodfood #mobilesecurity #mstg #reverseengineering #hashes#♥️##
 ```
 
 
@@ -14,3 +14,4 @@ Follow me on twitter: [@grepharder](https://twitter.com/grepharder)
 - [0x01 Intro to Reversing iOS Swift Apps with radare2](0x01_intro_to_reversing_ios_swift_apps_with_radare2.md)
 - [0x02 Learning Frida by Failing: Playing with Password Fields on Android](0x02_learning_frida_by_failing.md)
 - [0x03 Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida](0x03_learning_about_universal_links_and_fuzzing_url_schemes_on_ios_with_frida.md)
+- [0x04 Calling iOS Native Functions from Python Using Frida and RPC](0x04_calling_ios_native_functions_from_python_using_frida_and_rpc.md)
