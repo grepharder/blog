@@ -182,7 +182,7 @@ Once we load it to the Frida REPL `frida -U Telegram -l audiobox.js` we can simp
 
 ## Using Frida's RPC
 
-Frida allows to call functions via [RPC](https://www.frida.re/docs/javascript-api/#rpc) e.g. from Python. Which means that we are able to call the app's methods as if they were Python methods! Isn't that cool? We just have to rewrite our [Frida script](scripts/0x04/audiobox_rpc.js) like this:
+Frida allows to call functions via [RPC](https://www.frida.re/docs/javascript-api/#rpc) e.g. from Python. Which means that we are able to call the app's methods as if they were Python methods! Isn't that cool? We just have to rewrite our Frida script like this ([audiobox_rpc.js](scripts/0x04/audiobox_rpc.js)):
 
 ```javascript
 // audiobox_rpc.js
